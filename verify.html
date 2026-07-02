@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Verify Email — Spider Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#070a0f;color:#e8edf5;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .card{background:#111620;border:1px solid #1c2334;border-radius:20px;padding:44px 36px;max-width:420px;width:100%;text-align:center;animation:fadeUp .6s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .icon{width:72px;height:72px;border-radius:50%;border:2px solid #00f5ff;background:#0c1018;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:30px;box-shadow:0 0 24px #00f5ff33;}
+  .icon.error{border-color:#ff4d62;box-shadow:0 0 24px #ff4d6233;}
+  .icon.success{border-color:#00e676;box-shadow:0 0 24px #00e67633;}
+  .logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.18em;color:#00f5ff;text-shadow:0 0 14px #00f5ff44;margin-bottom:28px;}
+  h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#e8edf5;margin-bottom:12px;letter-spacing:.04em;}
+  p{font-size:14px;color:#8892a4;line-height:1.7;margin-bottom:24px;}
+  .spinner{width:40px;height:40px;border:3px solid #00f5ff22;border-top-color:#00f5ff;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .btn{display:inline-block;padding:12px 32px;background:#00f5ff;color:#070a0f;font-size:14px;font-weight:700;border-radius:10px;text-decoration:none;transition:opacity .2s,box-shadow .2s;letter-spacing:.04em;}
+  .btn:hover{opacity:.9;box-shadow:0 0 24px #00f5ff44;}
+  .btn.secondary{background:transparent;color:#00f5ff;border:1.5px solid #00f5ff;margin-left:10px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">SPIDER HUB</div>
+  <div id="icon-wrap" class="icon">⏳</div>
+  <h1 id="heading">Verifying your email...</h1>
+  <p id="body-text">Please wait while we confirm your email address.</p>
+  <div id="spinner" class="spinner"></div>
+  <div id="actions" style="display:none;"></div>
+</div>
+<script>
+(async () => {
+  const params = new URLSearchParams(location.search);
+  const token  = params.get('token');
+  const icon   = document.getElementById('icon-wrap');
+  const heading= document.getElementById('heading');
+  const body   = document.getElementById('body-text');
+  const spinner= document.getElementById('spinner');
+  const actions= document.getElementById('actions');
+
+  function show(type, h, b, btns) {
+    spinner.style.display = 'none';
+    icon.className = `icon ${type}`;
+    icon.textContent = type === 'success' ? '✓' : '✕';
+    heading.textContent = h;
+    body.textContent = b;
+    actions.style.display = 'block';
+    actions.innerHTML = btns;
+  }
+
+  if (!token) {
+    show('error', 'Invalid link', 'This verification link is missing a token. Please use the link sent to your email.', '<a class="btn" href="/">Go Home</a>');
+    return;
+  }
+
+  try {
+    const res  = await fetch(`/api/auth/verify?token=${encodeURIComponent(token)}`);
+    const data = await res.json();
+    if (res.ok) {
+      show('success', 'Email verified! 🎉', data.message || 'Your account is now active. Sign in to start using Spider Hub.', '<a class="btn" href="/">Sign In</a>');
+    } else {
+      show('error', 'Verification failed', data.error || 'This link may have expired or already been used.', '<a class="btn" href="/">Go Home</a><a class="btn secondary" href="/" onclick="event.preventDefault();localStorage.setItem(\'sh_resend\',\'1\');location.href=\'/\'">Resend Email</a>');
+    }
+  } catch(e) {
+    show('error', 'Something went wrong', 'Could not reach the server. Please check your connection and try again.', '<a class="btn" href="/">Go Home</a>');
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+#app { display: none; min-height: 100vh; }
+#app.visible { display: block; animation: blurIn .6s ease both; }
+#content { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.page { display: none; }
+.page.active { display: block; animation: blurIn .45s ease both; }
+
+.page-heading-block { margin-bottom: 28px; }
+.page-heading { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: clamp(22px, 4vw, 28px); color: var(--white); letter-spacing: .06em; margin-bottom: 6px; }
+.page-sub { font-size: 13px; color: var(--grey); }
+
+.sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.sec-title { font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: .24em; color: var(--cyan-dim); text-transform: uppercase; }
+.sec-more { font-size: 12px; color: var(--grey); cursor: pointer; transition: color .2s; }
+.sec-more:hover { color: var(--cyan); }
+
+#page-loader { display: none; flex-direction: column; gap: 24px; animation: blurIn .3s ease both; }
+#page-loader.visible { display: flex; }
+#pl-label { font-family: 'Orbitron', sans-serif; font-size: 10px; letter-spacing: .26em; color: var(--cyan-dim); display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
+.mini-sp { display: inline-block; width: 18px; height: 18px; border: 2px solid #00f5ff33; border-top-color: var(--cyan); border-radius: 50%; animation: spinArc .9s linear infinite; }

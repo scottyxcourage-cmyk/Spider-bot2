@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Spider Hub — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyan:#00f5ff;--cyan-dim:#00b8c2;--cyan-glow:#00f5ff44;
+  --bg:#070a0f;--bg2:#0c1018;--surface:#111620;--surface2:#161d2b;
+  --border:#1c2334;--grey:#8892a4;--white:#e8edf5;
+  --red:#ff4d62;--green:#00e676;--yellow:#ffd740;
+}
+body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh}
+
+/* ── LOGIN SCREEN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 36px;width:100%;max-width:380px}
+.login-logo{font-family:'Orbitron',sans-serif;font-size:18px;color:var(--cyan);text-align:center;margin-bottom:8px;letter-spacing:.1em}
+.login-sub{text-align:center;color:var(--grey);font-size:13px;margin-bottom:32px}
+.login-box input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--white);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:12px}
+.login-box input:focus{border-color:var(--cyan-dim)}
+.login-box input::placeholder{color:#8892a466}
+.btn{width:100%;padding:12px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-cyan{background:var(--cyan);color:#070a0f}
+.btn-cyan:hover{background:var(--cyan-dim)}
+.login-err{color:var(--red);font-size:13px;text-align:center;margin-top:10px;display:none}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none;min-height:100vh}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.header-logo{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--cyan);letter-spacing:.1em}
+.header-badge{background:#ff4d6220;color:var(--red);border:1px solid #ff4d6240;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;letter-spacing:.08em}
+.btn-sm{padding:7px 14px;border-radius:7px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-logout{background:var(--surface2);color:var(--grey)}
+.btn-logout:hover{color:var(--white)}
+
+main{max-width:1100px;margin:0 auto;padding:32px 24px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px}
+.stat-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:8px}
+.stat-value{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:700;color:var(--white)}
+.stat-value.cyan{color:var(--cyan)}
+.stat-value.green{color:var(--green)}
+.stat-value.red{color:var(--red)}
+.stat-value.yellow{color:var(--yellow)}
+
+/* Table */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--cyan-dim);text-transform:uppercase}
+.search-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--white);font-size:13px;outline:none;width:220px;transition:border-color .2s}
+.search-box:focus{border-color:var(--cyan-dim)}
+.search-box::placeholder{color:#8892a466}
+
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 16px;text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);border-bottom:1px solid var(--border);font-weight:500}
+td{padding:14px 16px;font-size:13px;border-bottom:1px solid #1c233444}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2)}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#00e67620;color:var(--green);border:1px solid #00e67640}
+.badge-yellow{background:#ffd74020;color:var(--yellow);border:1px solid #ffd74040}
+.actions{display:flex;gap:8px}
+.btn-verify{background:#00e67618;color:var(--green);border:1px solid #00e67630;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-verify:hover{background:#00e67630}
+.btn-delete{background:#ff4d6218;color:var(--red);border:1px solid #ff4d6230;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-delete:hover{background:#ff4d6230}
+.empty{padding:48px;text-align:center;color:var(--grey)}
+.loading{padding:48px;text-align:center;color:var(--grey)}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--white);transform:translateY(80px);opacity:0;transition:all .3s;z-index:999}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{border-color:#00e67640;color:var(--green)}
+#toast.error{border-color:#ff4d6240;color:var(--red)}
+
+@media(max-width:600px){
+  th:nth-child(3),td:nth-child(3){display:none}
+  .search-box{width:140px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">SPIDER HUB</div>
+    <div class="login-sub">Admin Dashboard</div>
+    <input type="password" id="admin-key-input" placeholder="Enter admin key" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn btn-cyan" onclick="doLogin()">Access Dashboard</button>
+    <div class="login-err" id="login-err">Invalid admin key. Try again.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header>
+    <div class="header-logo">SPIDER HUB <span style="color:var(--grey);font-size:11px;letter-spacing:.2em">/ ADMIN</span></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="header-badge">ADMIN</span>
+      <button class="btn-sm btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value cyan" id="stat-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Verified</div><div class="stat-value green" id="stat-verified">—</div></div>
+      <div class="stat-card"><div class="stat-label">Unverified</div><div class="stat-value yellow" id="stat-unverified">—</div></div>
+      <div class="stat-card"><div class="stat-label">Joined Today</div><div class="stat-value" id="stat-today">—</div></div>
+    </div>
+
+    <!-- AI Usage -->
+    <div class="section-head">
+      <div class="section-title">AI Chat Usage</div>
+    </div>
+    <div class="stats-grid" id="ai-stats-grid" style="margin-bottom:32px;">
+      <div class="stat-card"><div class="stat-label">Messages Today</div><div class="stat-value cyan" id="ai-stat-msgs-today">—</div></div>
+      <div class="stat-card"><div class="stat-label">Cost Today</div><div class="stat-value green" id="ai-stat-cost-today">—</div></div>
+      <div class="stat-card"><div class="stat-label">Cost Last 7 Days</div><div class="stat-value" id="ai-stat-cost-7d">—</div></div>
+      <div class="stat-card"><div class="stat-label">All-Time Cost</div><div class="stat-value yellow" id="ai-stat-cost-all">—</div></div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">Top AI Users Today</div>
+    </div>
+    <div class="table-wrap" style="margin-bottom:32px;">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Messages</th><th>Cost</th></tr></thead>
+        <tbody id="ai-users-tbody"><tr><td colspan="4" class="loading">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- Users Table -->
+    <div class="section-head">
+      <div class="section-title">All Users</div>
+      <input class="search-box" type="text" placeholder="Search users…" oninput="filterUsers(this.value)"/>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr><td colspan="6" class="loading">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let ADMIN_KEY = '';
+let ALL_USERS = [];
+
+function doLogin() {
+  const key = document.getElementById('admin-key-input').value.trim();
+  if (!key) return;
+  ADMIN_KEY = key;
+  loadDashboard();
+}
+
+function doLogout() {
+  ADMIN_KEY = '';
+  ALL_USERS = [];
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('admin-key-input').value = '';
+}
+
+async function apiFetch(path, options = {}) {
+  const res = await fetch(path, {
+    ...options,
+    headers: { 'x-admin-key': ADMIN_KEY, 'Content-Type': 'application/json', ...(options.headers || {}) }
+  });
+  return { ok: res.ok, data: await res.json() };
+}
+
+async function loadDashboard() {
+  const { ok: sok, data: sdata } = await apiFetch('/api/admin/stats');
+  if (!sok) {
+    document.getElementById('login-err').style.display = 'block';
+    ADMIN_KEY = '';
+    return;
+  }
+  document.getElementById('login-err').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+
+  document.getElementById('stat-total').textContent     = sdata.total;
+  document.getElementById('stat-verified').textContent  = sdata.verified;
+  document.getElementById('stat-unverified').textContent= sdata.unverified;
+  document.getElementById('stat-today').textContent     = sdata.today;
+
+  const { ok, data } = await apiFetch('/api/admin/users');
+  if (!ok) return;
+  ALL_USERS = data.users;
+  renderUsers(ALL_USERS);
+
+  loadAiCosts();
+}
+
+async function loadAiCosts() {
+  const { ok, data } = await apiFetch('/api/admin/ai-costs');
+  if (!ok) return;
+  document.getElementById('ai-stat-msgs-today').textContent = data.today.messages;
+  document.getElementById('ai-stat-cost-today').textContent = fmtUsd(data.today.cost);
+  document.getElementById('ai-stat-cost-7d').textContent    = fmtUsd(data.last7Days.cost);
+  document.getElementById('ai-stat-cost-all').textContent   = fmtUsd(data.allTime.cost);
+
+  const tbody = document.getElementById('ai-users-tbody');
+  if (!data.topUsersToday.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">No AI Chat activity today.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.topUsersToday.map(u => `
+    <tr>
+      <td style="font-weight:500">${esc(u.name)}</td>
+      <td style="color:var(--grey)">${esc(u.email)}</td>
+      <td>${u.messages}</td>
+      <td>${fmtUsd(u.cost)}</td>
+    </tr>
+  `).join('');
+}
+
+function fmtUsd(n) {
+  return '$' + (Number(n) || 0).toFixed(4);
+}
+
+function renderUsers(users) {
+  const tbody = document.getElementById('users-tbody');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No users yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr id="row-${u.id}">
+      <td style="color:var(--grey)">${u.id}</td>
+      <td style="font-weight:500">${esc(u.name)}</td>
+      <td style="color:var(--grey)">${esc(u.email)}</td>
+      <td>${u.verified
+        ? '<span class="badge badge-green">Verified</span>'
+        : '<span class="badge badge-yellow">Unverified</span>'}</td>
+      <td style="color:var(--grey)">${new Date(u.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</td>
+      <td>
+        <div class="actions">
+          ${!u.verified ? `<button class="btn-verify" onclick="verifyUser(${u.id})">Verify</button>` : ''}
+          <button class="btn-delete" onclick="deleteUser(${u.id},'${esc(u.name)}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterUsers(q) {
+  const filtered = ALL_USERS.filter(u =>
+    u.name.toLowerCase().includes(q.toLowerCase()) ||
+    u.email.toLowerCase().includes(q.toLowerCase())
+  );
+  renderUsers(filtered);
+}
+
+async function verifyUser(id) {
+  const { ok } = await apiFetch(`/api/admin/users/${id}/verify`, { method: 'PATCH' });
+  if (ok) {
+    const u = ALL_USERS.find(u => u.id === id);
+    if (u) u.verified = true;
+    renderUsers(ALL_USERS);
+    showToast('User verified successfully', 'success');
+    reloadStats();
+  } else {
+    showToast('Failed to verify user', 'error');
+  }
+}
+
+async function deleteUser(id, name) {
+  if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+  const { ok } = await apiFetch(`/api/admin/users/${id}`, { method: 'DELETE' });
+  if (ok) {
+    ALL_USERS = ALL_USERS.filter(u => u.id !== id);
+    renderUsers(ALL_USERS);
+    showToast('User deleted', 'success');
+    reloadStats();
+  } else {
+    showToast('Failed to delete user', 'error');
+  }
+}
+
+async function reloadStats() {
+  const { ok, data } = await apiFetch('/api/admin/stats');
+  if (!ok) return;
+  document.getElementById('stat-total').textContent      = data.total;
+  document.getElementById('stat-verified').textContent   = data.verified;
+  document.getElementById('stat-unverified').textContent = data.unverified;
+  document.getElementById('stat-today').textContent      = data.today;
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3000);
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reset Password — Spider Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#070a0f;color:#e8edf5;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .card{background:#111620;border:1px solid #1c2334;border-radius:20px;padding:44px 36px;max-width:420px;width:100%;animation:fadeUp .6s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:14px;letter-spacing:.18em;color:#00f5ff;text-shadow:0 0 14px #00f5ff44;margin-bottom:24px;text-align:center;}
+  .icon{width:64px;height:64px;border-radius:50%;border:2px solid #00f5ff;background:#0c1018;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;box-shadow:0 0 24px #00f5ff33;}
+  .icon.success{border-color:#00e676;box-shadow:0 0 24px #00e67633;}
+  .icon.error{border-color:#ff4d62;box-shadow:0 0 24px #ff4d6233;}
+  h1{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:#e8edf5;margin-bottom:8px;letter-spacing:.04em;text-align:center;}
+  .sub{font-size:13px;color:#8892a4;margin-bottom:28px;text-align:center;line-height:1.6;}
+  label{display:block;font-size:12px;font-weight:500;color:#8892a4;letter-spacing:.06em;margin-bottom:7px;}
+  input{width:100%;background:#0c1018;border:1px solid #1c2334;border-radius:10px;padding:13px 16px;color:#e8edf5;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:16px;}
+  input:focus{border-color:#00b8c2;box-shadow:0 0 0 3px #00f5ff22;}
+  input::placeholder{color:#8892a455;}
+  .btn{width:100%;padding:13px;background:#00f5ff;border:none;border-radius:10px;color:#070a0f;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s,box-shadow .2s;letter-spacing:.04em;}
+  .btn:hover{opacity:.9;box-shadow:0 0 24px #00f5ff44;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .err{background:#ff4d6215;border:1px solid #ff4d6233;border-radius:8px;padding:10px 14px;font-size:13px;color:#ff4d62;margin-bottom:14px;display:none;}
+  .err.show{display:block;}
+  .ok{background:#00e67615;border:1px solid #00e67633;border-radius:8px;padding:10px 14px;font-size:13px;color:#00e676;margin-bottom:14px;display:none;text-align:center;}
+  .ok.show{display:block;}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid #07070744;border-top-color:#070a0f;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .back{display:block;text-align:center;margin-top:18px;font-size:13px;color:#8892a4;text-decoration:none;transition:color .2s;}
+  .back:hover{color:#00f5ff;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">SPIDER HUB</div>
+  <div class="icon" id="page-icon">🔒</div>
+  <h1>Reset your password</h1>
+  <p class="sub">Enter and confirm your new password below.</p>
+
+  <div class="err" id="err-msg"></div>
+  <div class="ok"  id="ok-msg"></div>
+
+  <div id="form-wrap">
+    <label>New password</label>
+    <input type="password" id="pass1" placeholder="At least 6 characters" autocomplete="new-password"/>
+    <label>Confirm password</label>
+    <input type="password" id="pass2" placeholder="Repeat password" autocomplete="new-password"/>
+    <button class="btn" id="submit-btn" onclick="doReset()">Set New Password</button>
+  </div>
+  <a class="back" href="/">← Back to Spider Hub</a>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const token  = params.get('token');
+
+function showErr(msg) {
+  const el = document.getElementById('err-msg');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('ok-msg').classList.remove('show');
+}
+function showOk(msg) {
+  const el = document.getElementById('ok-msg');
+  el.textContent = msg; el.classList.add('show');
+  document.getElementById('err-msg').classList.remove('show');
+}
+
+if (!token) {
+  document.getElementById('form-wrap').style.display = 'none';
+  document.getElementById('page-icon').className = 'icon error';
+  document.getElementById('page-icon').textContent = '✕';
+  showErr('Invalid or missing reset token. Please request a new reset link from the app.');
+}
+
+async function doReset() {
+  const pass1 = document.getElementById('pass1').value;
+  const pass2 = document.getElementById('pass2').value;
+  if (!pass1 || !pass2) { showErr('Please fill in both fields.'); return; }
+  if (pass1.length < 6)  { showErr('Password must be at least 6 characters.'); return; }
+  if (pass1 !== pass2)   { showErr("Passwords don't match."); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Saving...';
+
+  try {
+    const res  = await fetch('/api/auth/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password: pass1 })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById('page-icon').className = 'icon success';
+      document.getElementById('page-icon').textContent = '✓';
+      document.getElementById('form-wrap').style.display = 'none';
+      showOk('Password updated! Redirecting to sign in...');
+      setTimeout(() => location.href = '/', 2200);
+    } else {
+      showErr(data.error || 'Something went wrong. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Set New Password';
+    }
+  } catch(e) {
+    showErr('Could not reach the server. Check your connection.');
+    btn.disabled = false;
+    btn.textContent = 'Set New Password';
+  }
+}
+
+// Allow Enter key
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doReset(); });
+</script>
+</body>
+</html>

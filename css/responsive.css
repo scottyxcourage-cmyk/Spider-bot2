@@ -1,0 +1,65 @@
+@media (max-width: 700px) {
+  #nav { padding: 0 14px; gap: 1px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #nav::-webkit-scrollbar { display: none; }
+  .nav-links { gap: 0; flex-shrink: 0; }
+  .nav-btn { padding: 8px 12px; font-size: 12px; min-height: 38px; }
+  #nav-logo { font-size: 13px; margin-right: 10px; }
+  #search-input { width: 110px; font-size: 16px; }
+  #search-input:focus { width: 150px; }
+  #content { padding: 18px 14px 80px; }
+  .hero-banner { height: 220px; }
+  .hero-content { padding: 16px; max-width: 100%; }
+  .hero-actions { width: 100%; }
+  .btn-hero { flex: 1; text-align: center; padding: 12px 16px; min-height: 44px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 10px; }
+  .auth-box { padding: 28px 20px; max-width: 100%; }
+  .field input { font-size: 16px; padding: 13px 14px; } /* 16px prevents iOS auto-zoom on focus */
+  .stat-row { gap: 8px; }
+  .stat-row { grid-template-columns: repeat(3,1fr); }
+  .modal-body { padding: 18px 16px 28px; }
+  .modal-hero { height: 200px; }
+  .modal-actions { flex-direction: column; }
+  .btn-modal { width: 100%; text-align: center; min-height: 46px; }
+  .modal-close { width: 40px; height: 40px; }
+  .user-avatar { width: 40px; height: 40px; }
+  .btn-dl { width: 40px; height: 40px; }
+  .track-item { padding: 12px 12px; }
+  .user-menu { right: -10px; min-width: 200px; }
+  #toast-wrap { left: 12px; right: 12px; top: 70px; align-items: stretch; }
+  .toast { max-width: 100%; }
+}
+@media (max-width: 480px) {
+  #nav-logo span { display: none; }
+  .hero-banner { height: 190px; }
+  .hero-title { font-size: 16px; }
+  .card-grid { grid-template-columns: repeat(2,1fr); }
+  .auth-logo-mark { font-size: 18px; }
+  .modal-body { padding: 16px 14px 24px; }
+  .profile-header { flex-direction: column; text-align: center; }
+}
+@media (hover: none) {
+  /* On touch devices, drop hover-only affordances that never trigger so taps feel responsive */
+  .card:hover { transform: none; }
+  .hero-banner:hover img { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ── Touch target fixes ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* iOS font-size 16px prevents auto-zoom on input focus */
+  .field input, #search-big { font-size: 16px !important; }
+  /* Ensure tap targets are at least 44px tall */
+  .nav-btn, .mn-btn, .btn-hero, .btn-modal, .btn-primary { min-height: 44px; }
+  .card { -webkit-tap-highlight-color: transparent; }
+  .track-item { -webkit-tap-highlight-color: transparent; }
+  /* Hide top nav search box on mobile — use search page instead */
+  #search-input { display: none; }
+  /* Make hero actions stack on narrow screens */
+  .hero-actions { flex-direction: column; gap: 8px; }
+  .btn-hero { width: 100%; justify-content: center; }
+  /* Fix modal on mobile */
+  #modal-box { margin: auto; border-radius: 16px 16px 0 0; max-height: 92vh; position: fixed; bottom: 0; left: 0; right: 0; }
+  #modal-overlay { align-items: flex-end; padding: 0; }
+}

@@ -1,0 +1,75 @@
+/* ── MOBILE BOTTOM TAB BAR ─────────────────────────────────────────────
+   Visible only on screens ≤ 700px. Sits fixed at the bottom, above any
+   system UI. Mirrors the top nav pages so users never need the sidebar
+   just to switch pages.                                                   */
+
+#mobile-nav {
+  display: none; /* shown via media query */
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 300;
+  background: #0a0e16ee;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid #1c2334;
+  padding: 0 8px env(safe-area-inset-bottom, 8px);
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+.mn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 60px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.mn-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  color: #8892a4;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: color .2s, background .2s;
+  min-width: 56px;
+  position: relative;
+}
+.mn-btn svg { transition: stroke .2s; }
+.mn-btn .mn-label { line-height: 1; }
+
+.mn-btn.active {
+  color: #00f5ff;
+}
+.mn-btn.active svg { stroke: #00f5ff !important; }
+.mn-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%; transform: translateX(-50%);
+  width: 20px; height: 2px;
+  background: #00f5ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00f5ff;
+}
+
+/* Push page content above the bottom nav on mobile */
+@media (max-width: 700px) {
+  #mobile-nav { display: flex; align-items: stretch; }
+  #content { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
+  /* Hide the sidebar hamburger text label on very small screens */
+  #sb-trigger .mn-label { display: none; }
+}
+
+@media (max-width: 360px) {
+  .mn-btn { padding: 6px 8px; min-width: 44px; font-size: 9px; }
+}

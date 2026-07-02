@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spider Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/reset.css"/>
+<link rel="stylesheet" href="css/tokens.css"/>
+<link rel="stylesheet" href="css/animations.css"/>
+<link rel="stylesheet" href="css/splash.css"/>
+<link rel="stylesheet" href="css/auth.css"/>
+<link rel="stylesheet" href="css/nav.css"/>
+<link rel="stylesheet" href="css/layout.css"/>
+<link rel="stylesheet" href="css/components.css"/>
+<link rel="stylesheet" href="css/dashboard.css"/>
+<link rel="stylesheet" href="css/modal.css"/>
+<link rel="stylesheet" href="css/skeleton.css"/>
+<link rel="stylesheet" href="css/responsive.css"/>
+<link rel="stylesheet" href="css/sidebar.css"/>
+<link rel="stylesheet" href="css/mobile-nav.css"/>
+<!-- Google Identity Services script is loaded dynamically in js/auth.js
+     so we get a reliable onload/onerror signal instead of guessing via a timeout. -->
+</head>
+<body>
+
+<!-- Toast container -->
+<div id="toast-wrap"></div>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <div id="splash-grad"></div>
+  <div id="scanline"></div>
+  <canvas id="particles"></canvas>
+  <svg id="web-svg" width="480" height="480" viewBox="0 0 480 480" fill="none"></svg>
+  <div id="logo-block">
+    <div id="spider-icon">
+      <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+        <circle cx="23" cy="23" r="8" fill="#00f5ff" opacity=".92"/>
+        <line x1="23" y1="15" x2="23" y2="3"  stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="23" y1="31" x2="23" y2="43" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="15" y1="23" x2="3"  y2="23" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="31" y1="23" x2="43" y2="23" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="17" y1="17" x2="8"  y2="8"  stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="17" x2="38" y2="8"  stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="17" y1="29" x2="8"  y2="38" stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="29" x2="38" y2="38" stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+      </svg>
+    </div>
+    <div id="wordmark">SPIDER HUB</div>
+    <div id="credit">Developed by Ben Maps &nbsp;•&nbsp; Zimbabwe 🇿🇼</div>
+  </div>
+  <div id="load-block">
+    <div class="sp-wrap">
+      <div class="sp-ring"></div>
+      <div class="sp-ring"></div>
+      <svg class="sp-arc" width="56" height="56">
+        <circle cx="28" cy="28" r="23" fill="none" stroke="#00f5ff" stroke-width="2.5" stroke-dasharray="108 36" stroke-linecap="round"/>
+      </svg>
+      <div class="sp-dot"></div>
+    </div>
+    <div id="msg-wrap"><div class="load-msg" id="msg-el">Initializing Spider Hub...</div></div>
+    <div id="prog-track"><div id="prog-bar"></div></div>
+    <div id="pct">0%</div>
+  </div>
+</div>
+
+<!-- Auth Screen -->
+<div id="auth-screen">
+  <div id="auth-grad"></div>
+  <div class="auth-box">
+    <div class="auth-logo">
+      <svg width="48" height="48" viewBox="0 0 46 46" fill="none">
+        <circle cx="23" cy="23" r="8" fill="#00f5ff" opacity=".92"/>
+        <line x1="23" y1="15" x2="23" y2="3"  stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="23" y1="31" x2="23" y2="43" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="15" y1="23" x2="3"  y2="23" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="31" y1="23" x2="43" y2="23" stroke="#00f5ff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+        <line x1="17" y1="17" x2="8"  y2="8"  stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="17" x2="38" y2="8"  stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="17" y1="29" x2="8"  y2="38" stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="29" x2="38" y2="38" stroke="#00f5ff" stroke-width="1.4" stroke-linecap="round" opacity=".5"/>
+      </svg>
+      <div class="auth-logo-mark">SPIDER HUB</div>
+      <div class="auth-sub">Your premium entertainment hub</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+    <div id="auth-success" class="auth-success"></div>
+    <!-- Login -->
+    <div id="form-login">
+      <div class="field"><label>Email address</label><input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/></div>
+      <div class="auth-forgot" onclick="handleForgot()">Forgot password?</div>
+      <button class="btn-primary" id="btn-login" onclick="handleLogin()">Sign In</button>
+      <div class="auth-forgot" id="resend-verify-link" style="display:none;" onclick="handleResendVerification()">Resend verification email</div>
+      <div class="auth-divider"><span>or</span></div>
+      <div id="google-btn-login" style="display:flex;justify-content:center;min-height:44px"></div>
+      <a href="/api/auth/google/login" id="google-fallback-login" class="btn-google" style="display:none;text-decoration:none;">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.3l-6.3-5.3C29.4 36 26.8 37 24 37c-5.3 0-9.6-3.3-11.3-8l-6.5 5C9 41.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C40.4 36.5 44 30.9 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+        <span>Continue with Google</span>
+      </a>
+    </div>
+    <!-- Signup -->
+    <div id="form-signup" style="display:none;">
+      <div class="field"><label>Full name</label><input type="text" id="signup-name" placeholder="Ben Maps" autocomplete="name"/></div>
+      <div class="field"><label>Email address</label><input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email"/></div>
+      <div class="field"><label>Password</label><input type="password" id="signup-pass" placeholder="At least 6 characters" autocomplete="new-password"/></div>
+      <div class="field"><label>Confirm password</label><input type="password" id="signup-pass2" placeholder="••••••••" autocomplete="new-password"/></div>
+      <button class="btn-primary" id="btn-signup" onclick="handleSignup()">Create Account</button>
+      <div class="auth-divider"><span>or</span></div>
+      <div id="google-btn-signup" style="display:flex;justify-content:center;min-height:44px"></div>
+      <a href="/api/auth/google/login" id="google-fallback-signup" class="btn-google" style="display:none;text-decoration:none;">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.3l-6.3-5.3C29.4 36 26.8 37 24 37c-5.3 0-9.6-3.3-11.3-8l-6.5 5C9 41.4 15.9 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C40.4 36.5 44 30.9 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+        <span>Continue with Google</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar Overlay -->
+<div id="sb-overlay"></div>
+
+<!-- Sidebar Drawer -->
+<aside id="sidebar">
+  <div class="sb-header">
+    <span class="sb-logo-mark">SPIDER HUB</span>
+    <button class="sb-close" onclick="closeSidebar()" aria-label="Close menu">✕</button>
+  </div>
+
+  <div class="sb-scroll">
+    <!-- User Card -->
+    <div class="sb-user-card">
+      <div class="sb-avatar-wrap">
+        <div class="sb-avatar" id="sb-avatar">U</div>
+        <div class="sb-user-details">
+          <div class="sb-user-name" id="sb-name">—</div>
+          <div class="sb-user-email" id="sb-email">—</div>
+          <div class="sb-status">
+            <span class="sb-status-dot"></span>
+            <span class="sb-status-text">Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Section -->
+    <div class="sb-section">
+      <div class="sb-section-label">Account</div>
+      <nav class="sb-nav" id="sb-nav">
+        <div class="sb-item" data-page="ai-chat" onclick="sbNavigate('ai-chat')">
+          <span id="sb-icon-aiChat"></span><span>AI Chat</span>
+        </div>
+        <div class="sb-item" data-page="profile" onclick="sbNavigate('profile')">
+          <span id="sb-icon-profile"></span><span>Profile</span>
+        </div>
+        <div class="sb-item" data-page="edit-profile" onclick="sbNavigate('edit-profile')">
+          <span id="sb-icon-editProfile"></span><span>Edit Profile</span>
+        </div>
+        <div class="sb-item" data-page="favorites" onclick="sbNavigate('favorites')">
+          <span id="sb-icon-favorites"></span><span>Favorites</span>
+        </div>
+        <div class="sb-item" data-page="watchlist" onclick="sbNavigate('watchlist')">
+          <span id="sb-icon-watchlist"></span><span>Watchlist</span>
+        </div>
+        <div class="sb-item" data-page="downloads" onclick="sbNavigate('downloads')">
+          <span id="sb-icon-downloads"></span><span>Downloads</span>
+        </div>
+        <div class="sb-item" data-page="history" onclick="sbNavigate('history')">
+          <span id="sb-icon-history"></span><span>History</span>
+        </div>
+        <div class="sb-item" data-page="notifications" onclick="sbNavigate('notifications')">
+          <span id="sb-icon-notifications"></span><span>Notifications</span>
+          <span class="sb-badge">3</span>
+        </div>
+        <div class="sb-item" data-page="messages" onclick="sbNavigate('messages')">
+          <span id="sb-icon-messages"></span><span>Messages</span>
+        </div>
+        <div class="sb-item" data-page="subscription" onclick="sbNavigate('subscription')">
+          <span id="sb-icon-subscription"></span><span>Subscription</span>
+        </div>
+        <div class="sb-item" onclick="openAdminPanel()">
+          <span id="sb-icon-admin"></span><span>Admin Panel</span>
+        </div>
+        <div class="sb-item sb-danger" onclick="sbLogout()">
+          <span id="sb-icon-logout"></span><span>Sign Out</span>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Settings Section (collapsible) -->
+    <div class="sb-section">
+      <button class="sb-settings-toggle" id="sb-settings-toggle" onclick="toggleSbSettings()">
+        <span style="display:flex;align-items:center;gap:7px;">
+          <span id="sb-icon-settingsGear"></span>Settings
+        </span>
+        <span class="sb-chevron">›</span>
+      </button>
+      <div class="sb-settings-body" id="sb-settings-body">
+        <div class="sb-settings-group">
+          <div class="sb-settings-group-label">Appearance</div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-appearance"></span>
+            <span>Appearance</span>
+          </div>
+          <div class="sb-setting-item">
+            <span id="sb-icon-darkMode"></span>
+            <span>Dark Mode</span>
+            <div class="sb-toggle-wrap">
+              <label class="sb-toggle">
+                <input type="checkbox" id="sb-toggle-darkmode" onchange="toggleDarkMode()"/>
+                <span class="sb-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-theme"></span>
+            <span>Theme</span>
+          </div>
+          <div class="sb-setting-item">
+            <span id="sb-icon-language"></span>
+            <span>Language</span>
+            <div class="sb-toggle-wrap" style="margin-left:auto">
+              <select class="settings-select" onchange="handleLanguageChange(this.value)" style="font-size:11px;padding:4px 8px;">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="pt">Português</option>
+                <option value="ar">العربية</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="sb-settings-group">
+          <div class="sb-settings-group-label">Playback & Data</div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-playback"></span>
+            <span>Playback Settings</span>
+          </div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-dlSettings"></span>
+            <span>Download Settings</span>
+          </div>
+          <div class="sb-setting-item">
+            <span id="sb-icon-dataSaver"></span>
+            <span>Data Saver</span>
+            <div class="sb-toggle-wrap">
+              <label class="sb-toggle">
+                <input type="checkbox" id="sb-toggle-datasaver" onchange="toggleDataSaver()"/>
+                <span class="sb-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="sb-setting-item">
+            <span id="sb-icon-cache"></span>
+            <span>Clear Cache</span>
+            <div class="sb-toggle-wrap" style="margin-left:auto">
+              <button class="settings-btn cyan" id="sb-cache-btn" onclick="cleanCache()" style="font-size:11px;padding:5px 10px;">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div class="sb-settings-group">
+          <div class="sb-settings-group-label">Privacy & Account</div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-notifSettings"></span>
+            <span>Notification Settings</span>
+          </div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-privacy"></span>
+            <span>Privacy &amp; Security</span>
+          </div>
+          <div class="sb-setting-item" onclick="sbNavigate('settings')">
+            <span id="sb-icon-account"></span>
+            <span>Account Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main App -->
+<div id="app">
+  <nav id="nav">
+    <button id="sb-trigger" onclick="openSidebar()" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/>
+      </svg>
+    </button>
+    <div id="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 46 46" fill="none">
+        <circle cx="23" cy="23" r="8" fill="#00f5ff" opacity=".9"/>
+        <line x1="23" y1="15" x2="23" y2="3"  stroke="#00f5ff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <line x1="23" y1="31" x2="23" y2="43" stroke="#00f5ff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <line x1="15" y1="23" x2="3"  y2="23" stroke="#00f5ff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <line x1="31" y1="23" x2="43" y2="23" stroke="#00f5ff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <line x1="17" y1="17" x2="8"  y2="8"  stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="17" x2="38" y2="8"  stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+        <line x1="17" y1="29" x2="8"  y2="38" stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+        <line x1="29" y1="29" x2="38" y2="38" stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+      </svg>
+      SPIDER HUB
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-page="home">Home</button>
+      <button class="nav-btn" data-page="movies">Movies</button>
+      <button class="nav-btn" data-page="music">Music</button>
+      <button class="nav-btn" data-page="search">Search</button>
+    </div>
+    <div class="nav-right">
+      <input type="text" id="search-input" placeholder="Search anything..." oninput="handleSearchInput(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
+      <div class="user-avatar" id="user-avatar" onclick="toggleUserMenu()">
+        <span id="avatar-letter">U</span>
+        <div class="user-menu" id="user-menu" style="display:none;">
+          <div class="user-info">
+            <div class="user-info-name" id="menu-name">—</div>
+            <div class="user-info-email" id="menu-email">—</div>
+          </div>
+          <div class="user-menu-item" onclick="navigateTo('profile')">👤 &nbsp;Profile</div>
+          <div class="user-menu-item danger" onclick="handleLogout()">⏻ &nbsp;Sign Out</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="content">
+    <!-- Page loader -->
+    <div id="page-loader">
+      <div id="pl-label"><span class="mini-sp"></span><span id="pl-text">Loading...</span></div>
+      <div id="pl-skeleton"></div>
+    </div>
+
+    <!-- Pages -->
+    <div class="page active" id="page-home">
+
+      <!-- Welcome banner -->
+      <div class="dash-welcome">
+        <div class="dash-welcome-avatar" id="dash-avatar">U</div>
+        <div class="dash-welcome-text">
+          <div class="dash-welcome-hi" id="dash-greeting">Welcome back</div>
+          <div class="dash-welcome-name" id="dash-username">—</div>
+        </div>
+        <div class="dash-welcome-streak" id="dash-streak-pill">🔥 0-day streak</div>
+      </div>
+
+      <!-- Balance / points / referrals / notifications -->
+      <div class="dash-pills">
+        <div class="dash-pill" onclick="sbNavigate('subscription')">
+          <div class="dash-pill-top"><span class="dash-pill-icon">💵</span><span class="dash-pill-tag">Balance</span></div>
+          <div class="dash-pill-value">$0.00</div>
+          <div class="dash-pill-label">Earn Center coming soon</div>
+        </div>
+        <div class="dash-pill" onclick="sbNavigate('profile')">
+          <div class="dash-pill-top"><span class="dash-pill-icon">⭐</span><span class="dash-pill-tag">Points</span></div>
+          <div class="dash-pill-value cyan" id="dash-points">0</div>
+          <div class="dash-pill-label">Earned from your activity</div>
+        </div>
+        <div class="dash-pill" onclick="sbNavigate('profile')">
+          <div class="dash-pill-top"><span class="dash-pill-icon">🤝</span><span class="dash-pill-tag">Referrals</span></div>
+          <div class="dash-pill-value">$0.00</div>
+          <div class="dash-pill-label">Referral program coming soon</div>
+        </div>
+        <div class="dash-pill" onclick="sbNavigate('notifications')">
+          <div class="dash-pill-top"><span class="dash-pill-icon">🔔</span><span class="dash-pill-tag">Alerts</span></div>
+          <div class="dash-pill-value" id="dash-notif-count">0</div>
+          <div class="dash-pill-label">Notifications waiting</div>
+        </div>
+      </div>
+
+      <!-- Level / XP -->
+      <div class="dash-xp-card">
+        <div class="dash-xp-top">
+          <div class="dash-xp-level"><span class="dash-xp-level-badge" id="dash-level-badge">LV 1</span><span>Level progress</span></div>
+          <div class="dash-xp-count" id="dash-xp-count">0 / 150 XP</div>
+        </div>
+        <div class="dash-xp-track"><div class="dash-xp-fill" id="dash-xp-fill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="dash-section">
+        <div class="dash-section-head">
+          <div><div class="dash-section-title">Recent Activity</div><div class="dash-section-sub">What you've been up to</div></div>
+        </div>
+        <div class="dash-feed" id="dash-activity-feed"></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="dash-section">
+        <div class="dash-section-head"><div class="dash-section-title">Quick Actions</div></div>
+        <div class="dash-actions">
+          <div class="dash-action" onclick="sbNavigate('ai-chat')"><div class="dash-action-icon">🤖</div><div class="dash-action-label">AI Chat</div></div>
+          <div class="dash-action" onclick="navigateTo('search')"><div class="dash-action-icon">🔍</div><div class="dash-action-label">Search</div></div>
+          <div class="dash-action" onclick="navigateTo('movies')"><div class="dash-action-icon">🎬</div><div class="dash-action-label">Movies</div></div>
+          <div class="dash-action" onclick="navigateTo('music')"><div class="dash-action-icon">🎵</div><div class="dash-action-label">Music</div></div>
+          <div class="dash-action" onclick="sbNavigate('watchlist')"><div class="dash-action-icon">🔖</div><div class="dash-action-label">Watchlist</div></div>
+          <div class="dash-action" onclick="sbNavigate('downloads')"><div class="dash-action-icon">📥</div><div class="dash-action-label">Downloads</div></div>
+          <div class="dash-action" onclick="sbNavigate('settings')"><div class="dash-action-icon">⚙️</div><div class="dash-action-label">Settings</div></div>
+        </div>
+      </div>
+
+      <!-- What's coming -->
+      <div class="dash-section">
+        <div class="dash-section-head">
+          <div><div class="dash-section-title">On the Roadmap</div><div class="dash-section-sub">Being built right now</div></div>
+        </div>
+        <div class="dash-teasers">
+          <div class="dash-teaser" onclick="sbNavigate('ai-chat')" style="cursor:pointer;"><span class="dash-teaser-badge" style="color:var(--green);background:#00e67614;border-color:#00e67622;">New</span><span class="dash-teaser-icon">🤖</span><div class="dash-teaser-title">AI Chat</div><div class="dash-teaser-sub">Ask anything — free daily messages included</div></div>
+          <div class="dash-teaser"><span class="dash-teaser-badge">Soon</span><span class="dash-teaser-icon">💰</span><div class="dash-teaser-title">Earn Center</div><div class="dash-teaser-sub">Referrals, daily rewards & more</div></div>
+          <div class="dash-teaser"><span class="dash-teaser-badge">Soon</span><span class="dash-teaser-icon">👥</span><div class="dash-teaser-title">Community</div><div class="dash-teaser-sub">Posts, comments & groups</div></div>
+        </div>
+      </div>
+
+      <div id="home-hero"></div>
+      <div class="sec-head"><div class="sec-title">Top Movies</div><div class="sec-more" onclick="navigateTo('movies')">See all →</div></div>
+      <div class="card-grid" id="home-movies"></div>
+      <div style="height:36px;"></div>
+      <div class="sec-head"><div class="sec-title">Top Music</div><div class="sec-more" onclick="navigateTo('music')">See all →</div></div>
+      <div class="music-row" id="home-music"></div>
+    </div>
+
+    <div class="page" id="page-movies">
+      <div class="page-heading-block">
+        <div class="page-heading">Movies &amp; TV</div>
+        <div class="page-sub">Trending this week</div>
+      </div>
+      <div class="card-grid" id="movies-grid"></div>
+      <div id="movies-error"></div>
+    </div>
+
+    <div class="page" id="page-music">
+      <div class="page-heading-block">
+        <div class="page-heading">Music</div>
+        <div class="page-sub">Popular tracks · 30s previews</div>
+      </div>
+      <div class="music-row" id="music-list"></div>
+      <div id="music-error"></div>
+    </div>
+
+    <div class="page" id="page-search">
+      <div class="page-heading-block">
+        <div class="page-heading">Search</div>
+        <div class="page-sub">Find movies, music and more</div>
+      </div>
+      <input type="text" id="search-big" class="search-big" placeholder="Search movies, music, artists..."
+        oninput="handleSearchInput(this.value)" onkeydown="if(event.key==='Enter')doSearch()"/>
+      <div id="search-results"></div>
+    </div>
+
+    <div class="page" id="page-profile">
+      <div class="page-heading-block">
+        <div class="page-heading">Profile</div>
+      </div>
+
+      <!-- Cover + avatar -->
+      <div class="profile-cover-wrap">
+        <div class="profile-cover"></div>
+        <div class="profile-cover-avatar">
+          <span id="profile-avatar-big">U</span>
+          <div class="profile-verify-badge unverified" id="profile-verify-badge">✓</div>
+        </div>
+      </div>
+
+      <!-- Identity -->
+      <div class="profile-id-row">
+        <div>
+          <div class="profile-id-name" id="profile-name">—</div>
+          <div class="profile-id-user" id="profile-username">—</div>
+        </div>
+      </div>
+      <div class="profile-id-bio" id="profile-bio">Add a short bio so people know what you're about.</div>
+      <div class="btn-edit-bio" onclick="editBio()">✏️ Edit Profile</div>
+
+      <div class="profile-social-follow">
+        <div><span class="profile-follow-num" id="profile-followers">0</span><span class="profile-follow-label">Followers</span></div>
+        <div><span class="profile-follow-num" id="profile-following">0</span><span class="profile-follow-label">Following</span></div>
+      </div>
+
+      <!-- Level / XP -->
+      <div class="dash-xp-card" style="margin-top:20px;">
+        <div class="dash-xp-top">
+          <div class="dash-xp-level"><span class="dash-xp-level-badge" id="profile-level-badge">LV 1</span><span>Level progress</span></div>
+          <div class="dash-xp-count" id="profile-xp-count">0 / 150 XP</div>
+        </div>
+        <div class="dash-xp-track"><div class="dash-xp-fill" id="profile-xp-fill" style="width:0%"></div></div>
+      </div>
+
+      <!-- Stats -->
+      <div class="profile-stat-grid">
+        <div class="profile-stat-card"><div class="stat-num" id="stat-views">0</div><div class="stat-label">VIEWED</div></div>
+        <div class="profile-stat-card"><div class="stat-num" id="stat-saves">0</div><div class="stat-label">SAVED</div></div>
+        <div class="profile-stat-card"><div class="stat-num" id="profile-total-earnings">$0.00</div><div class="stat-label">TOTAL EARNINGS</div></div>
+        <div class="profile-stat-card"><div class="stat-num" id="profile-total-referrals">0</div><div class="stat-label">REFERRALS</div></div>
+      </div>
+      <div class="profile-joined" id="profile-joined" style="margin-bottom:20px;">Member since —</div>
+
+      <!-- Badges -->
+      <div class="dash-section-head"><div class="dash-section-title">Badges</div></div>
+      <div class="profile-badges-row" id="profile-badges"></div>
+
+      <!-- Social links -->
+      <div class="dash-section-head"><div class="dash-section-title">Social Links</div></div>
+      <div class="profile-links-row">
+        <div class="profile-link-chip add" onclick="toast('Social links coming soon', 'info')">+ Add link</div>
+      </div>
+
+      <button class="btn-danger" onclick="handleLogout()">⏻ &nbsp;Sign Out</button>
+    </div>
+  </div>
+</div>
+
+    <!-- AI Chat page -->
+    <div class="page" id="page-ai-chat">
+      <div class="page-heading-block">
+        <div class="page-heading">AI Chat</div>
+        <div class="page-sub">Your Spider Hub assistant</div>
+      </div>
+
+      <div class="ai-quota-bar" id="ai-quota-bar">
+        <span id="ai-quota-text">Checking today's messages…</span>
+      </div>
+
+      <div class="ai-chat-window" id="ai-chat-window">
+        <div class="ai-msg ai-msg-bot">
+          <div class="ai-msg-bubble">Hey! I'm the Spider Hub AI Assistant. Ask me anything — movie picks, music recs, or just to chat.</div>
+        </div>
+        <div id="ai-chat-messages"></div>
+      </div>
+
+      <div class="ai-chat-inputbar">
+        <textarea id="ai-chat-input" class="ai-chat-textarea" placeholder="Message the assistant..." rows="1"
+          onkeydown="handleAiChatKeydown(event)" oninput="autoGrowAiInput(this)"></textarea>
+        <button class="ai-chat-send" id="ai-chat-send-btn" onclick="sendAiChatMessage()" aria-label="Send">➤</button>
+      </div>
+    </div>
+
+    <!-- Edit Profile page -->
+    <div class="page" id="page-edit-profile">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">✏️</div>
+        <div class="stub-meta">
+          <div class="stub-title">Edit Profile</div>
+          <div class="stub-sub">Update your account information</div>
+        </div>
+      </div>
+      <div style="padding: 16px 20px; max-width: 500px; margin: 0 auto;">
+        <form id="profile-edit-form" onsubmit="handleProfileUpdate(event)" style="display: flex; flex-direction: column; gap: 20px;">
+          
+          <!-- Avatar -->
+          <div>
+            <label style="font-weight: 600; display: block; margin-bottom: 8px;">Avatar (emoji or image URL)</label>
+            <div style="display: flex; gap: 12px; align-items: flex-end;">
+              <div id="avatar-preview" style="width: 60px; height: 60px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0;">👤</div>
+              <input 
+                type="text" 
+                id="avatar_url" 
+                placeholder="e.g., 😎 or https://..." 
+                style="flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text); font-family: inherit; font-size: 14px;"
+                maxlength="2000"
+              />
+            </div>
+            <div style="font-size: 11px; color: var(--grey); margin-top: 6px;">Use an emoji (😎) or paste an image URL</div>
+          </div>
+
+          <!-- Name -->
+          <div>
+            <label style="font-weight: 600; display: block; margin-bottom: 8px;">Display Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              placeholder="Your name" 
+              required
+              style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text); font-family: inherit; font-size: 14px; box-sizing: border-box;"
+              maxlength="100"
+            />
+            <div style="font-size: 11px; color: var(--grey); margin-top: 6px;"><span id="name-count">0</span>/100 characters</div>
+          </div>
+
+          <!-- Bio -->
+          <div>
+            <label style="font-weight: 600; display: block; margin-bottom: 8px;">Bio</label>
+            <textarea 
+              id="bio" 
+              placeholder="Tell us about yourself..." 
+              style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text); font-family: inherit; font-size: 14px; box-sizing: border-box; resize: vertical; min-height: 80px;"
+              maxlength="500"
+            ></textarea>
+            <div style="font-size: 11px; color: var(--grey); margin-top: 6px;"><span id="bio-count">0</span>/500 characters</div>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <button type="submit" class="btn-primary" style="flex: 1;">💾 Save Profile</button>
+            <button type="button" class="btn-secondary" onclick="sbNavigate('profile')" style="flex: 1;">Cancel</button>
+          </div>
+          <div id="profile-error" style="color: var(--error); font-size: 13px; display: none; text-align: center;"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Favorites page -->
+    <div class="page" id="page-favorites">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">❤️</div>
+        <div class="stub-meta">
+          <div class="stub-title">Favorites</div>
+          <div class="stub-sub">Your saved movies and tracks</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">❤️</div>
+        <div class="stub-empty-title">No favorites yet</div>
+        <div class="stub-empty-sub">Save movies and tracks from their detail view and they'll appear here.</div>
+        <div class="stub-cta" onclick="sbNavigate('movies')">Browse Movies</div>
+      </div>
+    </div>
+
+    <!-- Watchlist page -->
+    <div class="page" id="page-watchlist">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">🔖</div>
+        <div class="stub-meta">
+          <div class="stub-title">Watchlist</div>
+          <div class="stub-sub">Movies and shows you want to watch</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">🔖</div>
+        <div class="stub-empty-title">Your watchlist is empty</div>
+        <div class="stub-empty-sub">Add movies by tapping "Save" in the detail view. Your list will be here.</div>
+        <div class="stub-cta" onclick="sbNavigate('movies')">Browse Movies</div>
+      </div>
+    </div>
+
+    <!-- Downloads page -->
+    <div class="page" id="page-downloads">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">⬇️</div>
+        <div class="stub-meta">
+          <div class="stub-title">Downloads</div>
+          <div class="stub-sub">Content saved for offline viewing</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">⬇️</div>
+        <div class="stub-empty-title">Nothing downloaded yet</div>
+        <div class="stub-empty-sub">Offline download support is coming soon. Stay tuned.</div>
+        <div class="stub-cta" onclick="sbNavigate('home')">Go to Home</div>
+      </div>
+    </div>
+
+    <!-- History page -->
+    <div class="page" id="page-history">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">🕐</div>
+        <div class="stub-meta">
+          <div class="stub-title">History</div>
+          <div class="stub-sub">Your recently viewed content</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">🕐</div>
+        <div class="stub-empty-title">No history yet</div>
+        <div class="stub-empty-sub">Items you browse will be tracked here once history tracking is enabled.</div>
+        <div class="stub-cta" onclick="sbNavigate('movies')">Browse Movies</div>
+      </div>
+    </div>
+
+    <!-- Notifications page -->
+    <div class="page" id="page-notifications">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">🔔</div>
+        <div class="stub-meta">
+          <div class="stub-title">Notifications</div>
+          <div class="stub-sub">Your recent alerts and updates</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">🔔</div>
+        <div class="stub-empty-title">You're all caught up</div>
+        <div class="stub-empty-sub">New releases, recommendations, and account alerts will appear here.</div>
+        <div class="stub-cta" onclick="sbNavigate('home')">Go to Home</div>
+      </div>
+    </div>
+
+    <!-- Messages page -->
+    <div class="page" id="page-messages">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">💬</div>
+        <div class="stub-meta">
+          <div class="stub-title">Messages</div>
+          <div class="stub-sub">Connect with other users</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">💬</div>
+        <div class="stub-empty-title">No messages</div>
+        <div class="stub-empty-sub">Messaging between users is coming in a future update.</div>
+        <div class="stub-cta" onclick="sbNavigate('home')">Go to Home</div>
+      </div>
+    </div>
+
+    <!-- Subscription page -->
+    <div class="page" id="page-subscription">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">⭐</div>
+        <div class="stub-meta">
+          <div class="stub-title">Subscription</div>
+          <div class="stub-sub">Your current plan and billing</div>
+        </div>
+      </div>
+      <div class="stub-empty">
+        <div class="stub-empty-icon">⭐</div>
+        <div class="stub-empty-title">Free plan — no limits right now</div>
+        <div class="stub-empty-sub">Premium tiers with exclusive features and offline access are coming soon.</div>
+        <div class="stub-cta" onclick="sbNavigate('home')">Keep Exploring</div>
+      </div>
+    </div>
+
+    <!-- Settings page -->
+    <div class="page" id="page-settings">
+      <div class="stub-hero">
+        <div class="stub-icon-wrap">⚙️</div>
+        <div class="stub-meta">
+          <div class="stub-title">Settings</div>
+          <div class="stub-sub">Manage your preferences</div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-card-head">Appearance</div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🌙</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Dark Mode</div>
+            <div class="settings-row-sub">Switch between dark and light theme</div>
+          </div>
+          <div class="settings-row-action">
+            <label class="sb-toggle">
+              <input type="checkbox" id="settings-toggle-darkmode" onchange="toggleDarkMode(); document.getElementById('sb-toggle-darkmode').checked=this.checked;"/>
+              <span class="sb-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🌐</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Language</div>
+            <div class="settings-row-sub">App display language</div>
+          </div>
+          <div class="settings-row-action">
+            <select class="settings-select" onchange="handleLanguageChange(this.value)">
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+              <option value="pt">Português</option>
+              <option value="ar">العربية</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-card-head">Data &amp; Storage</div>
+        <div class="settings-row">
+          <div class="settings-row-icon">📶</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Data Saver</div>
+            <div class="settings-row-sub">Reduce data usage on mobile networks</div>
+          </div>
+          <div class="settings-row-action">
+            <label class="sb-toggle">
+              <input type="checkbox" id="settings-toggle-datasaver" onchange="toggleDataSaver(); document.getElementById('sb-toggle-datasaver').checked=this.checked;"/>
+              <span class="sb-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🗑️</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Clear Cache</div>
+            <div class="settings-row-sub">Free up local storage and reset view history</div>
+          </div>
+          <div class="settings-row-action">
+            <button class="settings-btn cyan" onclick="cleanCache()">Clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-card-head">Privacy &amp; Security</div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🔒</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Privacy &amp; Security</div>
+            <div class="settings-row-sub">Manage data sharing and security preferences</div>
+          </div>
+          <div class="settings-row-action" style="color:var(--grey);font-size:18px;">›</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-icon">⚙️</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Account Settings</div>
+            <div class="settings-row-sub">Change password and account details</div>
+          </div>
+          <div class="settings-row-action" style="color:var(--grey);font-size:18px;">›</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🔔</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Notification Settings</div>
+            <div class="settings-row-sub">Choose what alerts you receive</div>
+          </div>
+          <div class="settings-row-action" style="color:var(--grey);font-size:18px;">›</div>
+        </div>
+      </div>
+      <div class="settings-card">
+        <div class="settings-card-head">Danger Zone</div>
+        <div class="settings-row">
+          <div class="settings-row-icon">⏻</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Sign Out</div>
+            <div class="settings-row-sub">Log out of your Spider Hub account</div>
+          </div>
+          <div class="settings-row-action">
+            <button class="settings-btn" onclick="handleLogout()">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-box">
+    <div class="modal-hero" id="modal-hero">
+      <div class="modal-hero-overlay"></div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="badge cyan" id="modal-badge"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/config.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/particles.js"></script>
+<script src="js/splash.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/render.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/ai-chat.js"></script>
+<script src="js/search.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/mobile-nav.js"></script>
+<!-- ── ADMIN PANEL MODAL ── -->
+<div id="admin-overlay" onclick="closeAdminPanel()" style="display:none;position:fixed;inset:0;background:#00000088;z-index:900;backdrop-filter:blur(4px)"></div>
+<div id="admin-panel" style="display:none;position:fixed;inset:0;z-index:901;overflow-y:auto;padding:24px 16px">
+  <div style="max-width:900px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);background:var(--bg2)">
+      <div style="font-family:'Orbitron',sans-serif;font-size:13px;color:var(--cyan);letter-spacing:.1em">ADMIN PANEL</div>
+      <button onclick="closeAdminPanel()" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--grey);padding:6px 12px;cursor:pointer;font-size:13px">✕ Close</button>
+    </div>
+
+    <!-- Passcode screen -->
+    <div id="admin-lock" style="padding:48px 24px;text-align:center">
+      <div style="font-size:32px;margin-bottom:16px">🔒</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:14px;color:var(--white);margin-bottom:8px;letter-spacing:.08em">ADMIN ACCESS</div>
+      <div style="color:var(--grey);font-size:13px;margin-bottom:24px">Enter your admin passcode to continue</div>
+      <input id="admin-passcode-input" type="password" placeholder="Admin passcode"
+        style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--white);font-size:14px;outline:none;width:100%;max-width:300px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto"
+        onkeydown="if(event.key==='Enter')submitAdminPasscode()"/>
+      <button onclick="submitAdminPasscode()" style="background:var(--cyan);color:#070a0f;border:none;border-radius:8px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer">Unlock</button>
+      <div id="admin-lock-err" style="color:var(--red);font-size:13px;margin-top:12px;display:none">Incorrect passcode. Try again.</div>
+    </div>
+
+    <!-- Dashboard (hidden until unlocked) -->
+    <div id="admin-content" style="display:none;padding:24px">
+
+      <!-- Stats -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Total Users</div>
+          <div id="ap-stat-total" style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--cyan)">—</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Verified</div>
+          <div id="ap-stat-verified" style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:#00e676">—</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Unverified</div>
+          <div id="ap-stat-unverified" style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:#ffd740">—</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px">
+          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:6px">Joined Today</div>
+          <div id="ap-stat-today" style="font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--white)">—</div>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--cyan-dim);text-transform:uppercase">All Users</div>
+        <input id="ap-search" type="text" placeholder="Search…" oninput="apFilterUsers(this.value)"
+          style="background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 12px;color:var(--white);font-size:13px;outline:none;width:180px"/>
+      </div>
+
+      <!-- Table -->
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border)">
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">#</th>
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">Name</th>
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">Email</th>
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">Status</th>
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">Joined</th>
+              <th style="padding:10px 14px;text-align:left;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);font-weight:500">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ap-users-tbody">
+            <tr><td colspan="6" style="padding:32px;text-align:center;color:var(--grey)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Lock button -->
+      <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;color:var(--grey)" id="ap-last-updated">—</div>
+        <div style="display:flex;gap:8px">
+          <button onclick="apRefresh()" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--cyan);padding:8px 16px;cursor:pointer;font-size:12px">↻ Refresh</button>
+          <button onclick="lockAdminPanel()" style="background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--grey);padding:8px 16px;cursor:pointer;font-size:12px">🔒 Lock Panel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── ADMIN PANEL ──────────────────────────────────────────────────────
+let AP_REFRESH_TIMER = null;
+
+function openAdminPanel() {
+  closeSidebar();
+  document.getElementById('admin-overlay').style.display = 'block';
+  document.getElementById('admin-panel').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  if (!AP_KEY) {
+    document.getElementById('admin-lock').style.display = 'block';
+    document.getElementById('admin-content').style.display = 'none';
+    setTimeout(() => document.getElementById('admin-passcode-input').focus(), 100);
+  } else {
+    apRefresh();
+    startApAutoRefresh();
+  }
+}
+
+function closeAdminPanel() {
+  document.getElementById('admin-overlay').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.body.style.overflow = '';
+  stopApAutoRefresh();
+}
+
+function startApAutoRefresh() {
+  stopApAutoRefresh();
+  AP_REFRESH_TIMER = setInterval(() => apRefresh(), 30000);
+}
+
+function stopApAutoRefresh() {
+  if (AP_REFRESH_TIMER) { clearInterval(AP_REFRESH_TIMER); AP_REFRESH_TIMER = null; }
+}
+
+function lockAdminPanel() {
+  AP_KEY = '';
+  AP_ALL_USERS = [];
+  stopApAutoRefresh();
+  document.getElementById('admin-lock').style.display = 'block';
+  document.getElementById('admin-content').style.display = 'none';
+  document.getElementById('admin-passcode-input').value = '';
+  document.getElementById('admin-lock-err').style.display = 'none';
+}
+
+async function apRefresh() {
+  const [statsRes, usersRes] = await Promise.all([
+    fetch('/api/admin/stats', { headers: { 'x-admin-key': AP_KEY } }),
+    fetch('/api/admin/users', { headers: { 'x-admin-key': AP_KEY } })
+  ]);
+  if (!statsRes.ok) return;
+  apSetStats(await statsRes.json());
+  const udata = await usersRes.json();
+  AP_ALL_USERS = udata.users || [];
+  apRenderUsers(AP_ALL_USERS);
+  const now = new Date();
+  document.getElementById('ap-last-updated').textContent =
+    `Last updated: ${now.toLocaleTimeString()}`;
+}
+
+async function submitAdminPasscode() {
+  const key = document.getElementById('admin-passcode-input').value.trim();
+  if (!key) return;
+  const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': key } });
+  if (!res.ok) {
+    document.getElementById('admin-lock-err').style.display = 'block';
+    return;
+  }
+  AP_KEY = key;
+  document.getElementById('admin-lock-err').style.display = 'none';
+  document.getElementById('admin-lock').style.display = 'none';
+  document.getElementById('admin-content').style.display = 'block';
+  const data = await res.json();
+  apSetStats(data);
+  apLoadUsers();
+  startApAutoRefresh();
+}
+
+function apSetStats(data) {
+  document.getElementById('ap-stat-total').textContent     = data.total;
+  document.getElementById('ap-stat-verified').textContent  = data.verified;
+  document.getElementById('ap-stat-unverified').textContent= data.unverified;
+  document.getElementById('ap-stat-today').textContent     = data.today;
+}
+
+async function apLoadUsers() {
+  const res = await fetch('/api/admin/users', { headers: { 'x-admin-key': AP_KEY } });
+  const data = await res.json();
+  AP_ALL_USERS = data.users || [];
+  apRenderUsers(AP_ALL_USERS);
+}
+
+function apRenderUsers(users) {
+  const tbody = document.getElementById('ap-users-tbody');
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:32px;text-align:center;color:var(--grey)">No users yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr style="border-bottom:1px solid #1c233430" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <td style="padding:12px 14px;font-size:12px;color:var(--grey)">${u.id}</td>
+      <td style="padding:12px 14px;font-size:13px;font-weight:500">${apEsc(u.name)}</td>
+      <td style="padding:12px 14px;font-size:12px;color:var(--grey)">${apEsc(u.email)}</td>
+      <td style="padding:12px 14px">${u.verified
+        ? '<span style="background:#00e67620;color:#00e676;border:1px solid #00e67640;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600">Verified</span>'
+        : '<span style="background:#ffd74020;color:#ffd740;border:1px solid #ffd74040;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600">Unverified</span>'
+      }</td>
+      <td style="padding:12px 14px;font-size:12px;color:var(--grey)">${new Date(u.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</td>
+      <td style="padding:12px 14px">
+        <div style="display:flex;gap:6px">
+          ${!u.verified ? `<button onclick="apVerifyUser(${u.id})" style="background:#00e67618;color:#00e676;border:1px solid #00e67630;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer">Verify</button>` : ''}
+          <button onclick="apDeleteUser(${u.id},'${apEsc(u.name)}')" style="background:#ff4d6218;color:#ff4d62;border:1px solid #ff4d6230;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:600;cursor:pointer">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function apFilterUsers(q) {
+  const f = AP_ALL_USERS.filter(u =>
+    u.name.toLowerCase().includes(q.toLowerCase()) ||
+    u.email.toLowerCase().includes(q.toLowerCase())
+  );
+  apRenderUsers(f);
+}
+
+async function apVerifyUser(id) {
+  const res = await fetch(`/api/admin/users/${id}/verify`, { method: 'PATCH', headers: { 'x-admin-key': AP_KEY } });
+  if (res.ok) {
+    const u = AP_ALL_USERS.find(u => u.id === id);
+    if (u) u.verified = true;
+    apRenderUsers(AP_ALL_USERS);
+    apReloadStats();
+    toast('User verified', 'success');
+  }
+}
+
+async function apDeleteUser(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const res = await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers: { 'x-admin-key': AP_KEY } });
+  if (res.ok) {
+    AP_ALL_USERS = AP_ALL_USERS.filter(u => u.id !== id);
+    apRenderUsers(AP_ALL_USERS);
+    apReloadStats();
+    toast('User deleted', 'info');
+  }
+}
+
+async function apReloadStats() {
+  const res = await fetch('/api/admin/stats', { headers: { 'x-admin-key': AP_KEY } });
+  if (res.ok) apSetStats(await res.json());
+}
+
+function apEsc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>

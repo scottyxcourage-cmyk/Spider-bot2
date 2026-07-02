@@ -1,0 +1,5 @@
+.sk { border-radius: 6px; background: linear-gradient(90deg, var(--surface) 25%, #1a2030 50%, var(--surface) 75%); background-size: 500px 100%; animation: shimmer 1.7s infinite linear; }
+.sk-card { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+.sk-card .sk-poster { height: 220px; }
+.sk-card .sk-body { padding: 12px 13px 14px; display: flex; flex-direction: column; gap: 8px; }
+.sk-track { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; }

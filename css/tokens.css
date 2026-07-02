@@ -1,0 +1,14 @@
+:root {
+  --cyan:      #00f5ff;
+  --cyan-dim:  #00b8c2;
+  --cyan-glow: #00f5ff44;
+  --bg:        #070a0f;
+  --bg2:       #0c1018;
+  --surface:   #111620;
+  --surface2:  #161d2b;
+  --border:    #1c2334;
+  --grey:      #8892a4;
+  --white:     #e8edf5;
+  --red:       #ff4d62;
+  --green:     #00e676;
+}

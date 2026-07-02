@@ -1,0 +1,13 @@
+@keyframes particleDrift { 0%,100%{transform:translateY(0) translateX(0);opacity:.5;} 50%{transform:translateY(-26px) translateX(10px);opacity:1;} }
+@keyframes logoGlow { 0%,100%{text-shadow:0 0 20px var(--cyan-glow),0 0 60px var(--cyan-glow);} 50%{text-shadow:0 0 40px var(--cyan),0 0 90px var(--cyan-glow);} }
+@keyframes spinArc { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+@keyframes pulseRing { 0%{transform:scale(.95);opacity:.7;} 70%{transform:scale(1.15);opacity:0;} 100%{transform:scale(.95);opacity:0;} }
+@keyframes webDraw { from{stroke-dashoffset:900;opacity:0;} to{stroke-dashoffset:0;opacity:.13;} }
+@keyframes scanline { 0%{top:-4px;} 100%{top:100vh;} }
+@keyframes shimmer { 0%{background-position:-500px 0;} 100%{background-position:500px 0;} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
+@keyframes scaleIn { from{opacity:0;transform:scale(.84);} to{opacity:1;transform:scale(1);} }
+@keyframes blurIn { from{opacity:0;filter:blur(12px);transform:scale(.98);} to{opacity:1;filter:blur(0);transform:scale(1);} }
+@keyframes msgFade { 0%,15%{opacity:0;transform:translateY(7px);} 20%,80%{opacity:1;transform:translateY(0);} 85%,100%{opacity:0;transform:translateY(-7px);} }
+@keyframes toastIn { from{opacity:0;transform:translateX(40px);} to{opacity:1;transform:translateX(0);} }
+@keyframes gradBG { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
